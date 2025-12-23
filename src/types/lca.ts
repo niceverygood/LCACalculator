@@ -1,0 +1,124 @@
+// 레진 타입 정의
+export type ResinType =
+  | 'TPS'
+  | 'PLA'
+  | 'PBAT'
+  | 'HDPE_VIRGIN'
+  | 'HDPE_RECYCLE'
+  | 'HDPE_BIO'
+  | 'LDPE_VIRGIN'
+  | 'LDPE_RECYCLE'
+  | 'LDPE_BIO'
+  | 'PP_VIRGIN'
+  | 'PP_RECYCLE'
+  | 'PP_BIO';
+
+// 첨가제 타입 정의
+export type AdditiveType =
+  | 'TALC'
+  | 'COCONUT'
+  | 'BAMBOO'
+  | 'CASTOR_OIL'
+  | 'TAB_363';
+
+// 폐기 모드 정의
+export type DisposalMode =
+  | 'PELLET_ONLY'    // 펠릿 단계까지만
+  | 'TO_PRODUCT'     // 제품 제조까지 (공정/운송 포함)
+  | 'COMPOST'        // 퇴비화
+  | 'INCINERATION';  // 소각
+
+// LCA 입력 데이터 타입
+export interface LcaInput {
+  totalProductionKg: number;                    // 총 생산량 (kg)
+  gwgResinMix: Record<ResinType, number>;       // GWG 원료 배합 (비율)
+  gwgAdditiveMix: Record<AdditiveType, number>; // GWG 첨가제 배합 (비율)
+  pelletElectricityKwh: number;                 // 펠릿 제조 전력 사용량 (kWh)
+  pelletSeaKm: number;                          // 펠릿 해상 운송 거리 (km)
+  pelletLandKm: number;                         // 펠릿 육상 운송 거리 (km)
+  productElectricityKwh: number;                // 2차 제조 공정 전력 (kWh)
+  sheetKg: number;                              // 시트 공정 사용량 (kg)
+  injectionKg: number;                          // 사출 공정 사용량 (kg)
+  filmKg: number;                               // 필름 공정 사용량 (kg)
+  disposalMode: DisposalMode;                   // 폐기 시나리오
+}
+
+// 시나리오 이름 타입
+export type ScenarioName = 'GWG' | 'HDPE' | 'LDPE' | 'PP';
+
+// 시나리오별 결과 타입
+export interface LcaScenarioResult {
+  name: ScenarioName;
+  pelletStageEmission: number;     // 펠릿 단계까지만의 kgCO2
+  productStageEmission: number;    // 제품 제조까지의 추가 배출량(공정/운송)
+  totalEmission: number;           // pellet + product
+  disposalAddedEmission: number;   // 퇴비/소각에 따른 추가 배출량 (없으면 0)
+}
+
+// LCA 결과 요약 타입
+export interface LcaResultSummary {
+  scenarios: LcaScenarioResult[];
+  gwg: LcaScenarioResult;
+  hdpe: LcaScenarioResult;
+  ldpe: LcaScenarioResult;
+  pp: LcaScenarioResult;
+}
+
+// 레진 타입 목록 (UI에서 사용)
+export const RESIN_TYPES: ResinType[] = [
+  'TPS',
+  'PLA',
+  'PBAT',
+  'HDPE_VIRGIN',
+  'HDPE_RECYCLE',
+  'HDPE_BIO',
+  'LDPE_VIRGIN',
+  'LDPE_RECYCLE',
+  'LDPE_BIO',
+  'PP_VIRGIN',
+  'PP_RECYCLE',
+  'PP_BIO',
+];
+
+// 첨가제 타입 목록 (UI에서 사용)
+export const ADDITIVE_TYPES: AdditiveType[] = [
+  'TALC',
+  'COCONUT',
+  'BAMBOO',
+  'CASTOR_OIL',
+  'TAB_363',
+];
+
+// 레진 타입 한글 라벨
+export const RESIN_LABELS: Record<ResinType, string> = {
+  TPS: 'TPS (카사바전분)',
+  PLA: 'PLA',
+  PBAT: 'PBAT',
+  HDPE_VIRGIN: 'HDPE (버진)',
+  HDPE_RECYCLE: 'HDPE (재활용)',
+  HDPE_BIO: 'HDPE (바이오)',
+  LDPE_VIRGIN: 'LDPE (버진)',
+  LDPE_RECYCLE: 'LDPE (재활용)',
+  LDPE_BIO: 'LDPE (바이오)',
+  PP_VIRGIN: 'PP (버진)',
+  PP_RECYCLE: 'PP (재활용)',
+  PP_BIO: 'PP (바이오)',
+};
+
+// 첨가제 타입 한글 라벨
+export const ADDITIVE_LABELS: Record<AdditiveType, string> = {
+  TALC: 'Talc',
+  COCONUT: 'Coconut',
+  BAMBOO: 'Bamboo',
+  CASTOR_OIL: 'Castor Oil',
+  TAB_363: 'TAB 363',
+};
+
+// 폐기 모드 한글 라벨
+export const DISPOSAL_LABELS: Record<DisposalMode, string> = {
+  PELLET_ONLY: '펠릿 단계까지만',
+  TO_PRODUCT: '제품 제조까지',
+  COMPOST: '퇴비화',
+  INCINERATION: '소각',
+};
+
