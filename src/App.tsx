@@ -23,11 +23,11 @@ const defaultResinMix: Record<ResinType, number> = {
 
 // 기본 첨가제 배합 초기값 (% 단위) - 원료 + 첨가제 합이 100%
 const defaultAdditiveMix: Record<AdditiveType, number> = {
-  TALC: 2,
-  COCONUT: 2,
-  BAMBOO: 2,
-  CASTOR_OIL: 2,
-  TAB_363: 2,
+  BIOMASS_1: 2,
+  BIOMASS_2: 2,
+  ADDITIVE_1: 2,
+  ADDITIVE_2: 2,
+  ADDITIVE_3: 2,
 };
 
 // 기본 LCA 입력값

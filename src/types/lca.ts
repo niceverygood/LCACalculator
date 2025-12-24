@@ -15,11 +15,11 @@ export type ResinType =
 
 // 첨가제 타입 정의
 export type AdditiveType =
-  | 'TALC'
-  | 'COCONUT'
-  | 'BAMBOO'
-  | 'CASTOR_OIL'
-  | 'TAB_363';
+  | 'BIOMASS_1'
+  | 'BIOMASS_2'
+  | 'ADDITIVE_1'
+  | 'ADDITIVE_2'
+  | 'ADDITIVE_3';
 
 // 폐기 모드 정의
 export type DisposalMode =
@@ -98,11 +98,11 @@ export const RESIN_TYPES: ResinType[] = [
 
 // 첨가제 타입 목록 (UI에서 사용)
 export const ADDITIVE_TYPES: AdditiveType[] = [
-  'TALC',
-  'COCONUT',
-  'BAMBOO',
-  'CASTOR_OIL',
-  'TAB_363',
+  'BIOMASS_1',
+  'BIOMASS_2',
+  'ADDITIVE_1',
+  'ADDITIVE_2',
+  'ADDITIVE_3',
 ];
 
 // 공정 타입 목록 (UI에서 사용)
@@ -131,11 +131,11 @@ export const RESIN_LABELS: Record<ResinType, string> = {
 
 // 첨가제 타입 한글 라벨
 export const ADDITIVE_LABELS: Record<AdditiveType, string> = {
-  TALC: 'Talc',
-  COCONUT: 'Coconut',
-  BAMBOO: 'Bamboo',
-  CASTOR_OIL: 'Castor Oil',
-  TAB_363: 'TAB 363',
+  BIOMASS_1: 'Biomass 1',
+  BIOMASS_2: 'Biomass 2',
+  ADDITIVE_1: 'Additive 1',
+  ADDITIVE_2: 'Additive 2',
+  ADDITIVE_3: 'Additive 3',
 };
 
 // 폐기 모드 한글 라벨

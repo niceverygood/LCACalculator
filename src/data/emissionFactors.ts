@@ -18,11 +18,11 @@ export const RESIN_EMISSION_PER_KG: Record<ResinType, number> = {
 
 // 첨가제별 kgCO2/kg 배출 계수
 export const ADDITIVE_EMISSION_PER_KG: Record<AdditiveType, number> = {
-  TALC: 2.6,
-  COCONUT: 6.99,
-  BAMBOO: 0.86,
-  CASTOR_OIL: 18.9,
-  TAB_363: 3.52,
+  BIOMASS_1: 2.6,
+  BIOMASS_2: 6.99,
+  ADDITIVE_1: 0.86,
+  ADDITIVE_2: 18.9,
+  ADDITIVE_3: 3.52,
 };
 
 // 전력 사용 배출 계수 (kgCO2/kWh)
@@ -106,9 +106,9 @@ export const PP_BASE_MIX: Record<ResinType, number> = {
 
 // 첨가제 없음 (비교 시나리오용)
 export const EMPTY_ADDITIVE_MIX: Record<AdditiveType, number> = {
-  TALC: 0,
-  COCONUT: 0,
-  BAMBOO: 0,
-  CASTOR_OIL: 0,
-  TAB_363: 0,
+  BIOMASS_1: 0,
+  BIOMASS_2: 0,
+  ADDITIVE_1: 0,
+  ADDITIVE_2: 0,
+  ADDITIVE_3: 0,
 };
