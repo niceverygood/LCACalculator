@@ -1,4 +1,4 @@
-export type Language = 'ko' | 'en';
+export type Language = 'ko' | 'en' | 'ja';
 
 export const translations = {
   ko: {
@@ -205,7 +205,108 @@ export const translations = {
     // Units
     kgCO2: 'kg CO₂',
   },
+  ja: {
+    // Header
+    title: '炭素排出量計算機 (LCA Calculator)',
+    subtitle: 'GWGペレット vs HDPE/LDPE/PP 比較分析',
+    
+    // Form sections
+    resinSection: '原料配合比率入力 (GWGペレット)',
+    additiveSection: '添加剤配合比率入力',
+    productionSection: '総生産量およびペレット工程',
+    gwgTransportSection: 'グリーンホエールグローバル輸送 (ペレット → 顧客)',
+    customerProcessSection: '顧客製造工程 (1つ選択)',
+    customerTransportSection: '顧客輸送 (製品 → 最終目的地)',
+    disposalSection: '廃棄シナリオ',
+    
+    // Labels
+    totalProduction: '総生産量 (kg)',
+    pelletElectricity: 'ペレット電力使用量 (kWh)',
+    seaTransport: '海上輸送距離 (km)',
+    landTransport: '陸上輸送距離 (km)',
+    processType: '工程方式選択',
+    disposalMode: '廃棄方式選択',
+    
+    // Sum displays
+    resinSum: '原料合計',
+    additiveSum: '添加剤合計',
+    totalSum: '原料 + 添加剤 総合計',
+    totalWarning: '⚠️ 合計は100%でなければなりません！',
+    compostWarning: 'ℹ️ HDPE, LDPE, PPは堆肥化不可 → 焼却処理として計算されます',
+    
+    // Process types
+    processElectricity: '総電力使用量 (kWh)',
+    processInjection: '射出 - 原料投入量 (kg)',
+    processFilm: 'フィルム (kg)',
+    processSheet: 'シート (kg)',
+    
+    // Disposal modes
+    disposalPelletOnly: 'ペレット段階まで',
+    disposalToProduct: '製品製造まで',
+    disposalCompost: '堆肥化',
+    disposalIncineration: '焼却',
+    
+    // Resin labels
+    resinTPS: 'TPS (キャッサバ澱粉)',
+    resinPLA: 'PLA',
+    resinPBAT: 'PBAT',
+    resinHDPE_VIRGIN: 'HDPE (バージン)',
+    resinHDPE_RECYCLE: 'HDPE (リサイクル)',
+    resinHDPE_BIO: 'HDPE (バイオ)',
+    resinLDPE_VIRGIN: 'LDPE (バージン)',
+    resinLDPE_RECYCLE: 'LDPE (リサイクル)',
+    resinLDPE_BIO: 'LDPE (バイオ)',
+    resinPP_VIRGIN: 'PP (バージン)',
+    resinPP_RECYCLE: 'PP (リサイクル)',
+    resinPP_BIO: 'PP (バイオ)',
+    
+    // Result section
+    resultSummaryTitle: 'GWGペレット基準サマリー',
+    resultComparisonTitle: '炭素排出量比較 (GWG vs HDPE/LDPE/PP)',
+    resultChartTitle: '総炭素排出量比較チャート',
+    resultAnalysisTitle: '環境影響分析',
+    
+    // Result labels
+    pelletEmission: 'ペレット段階排出量',
+    gwgTransportEmission: 'GW輸送排出量',
+    productEmission: '顧客製造排出量',
+    customerTransportEmission: '顧客輸送排出量',
+    disposalEmission: '廃棄追加排出量',
+    totalEmission: '総炭素排出量',
+    
+    // Table headers
+    tableType: '種類',
+    tablePellet: 'ペレット',
+    tableGwgTransport: 'GW輸送',
+    tableProduct: '製造',
+    tableCustomerTransport: '顧客輸送',
+    tableDisposal: '廃棄',
+    tableTotal: '合計',
+    tableVsGwg: 'GWG比',
+    
+    // Table notes
+    tableNote: '* 単位: kg CO₂ / GWG比: 正数(+)はより多い排出、負数(-)はより少ない排出',
+    tableNote2: '* HDPE/LDPE/PP: バージン、国内輸送基準固定値 (2231.8 / 2131.8 / 1801.8 kg CO₂/トン)',
+    
+    // Chart legend
+    legendGwg: 'GWG (環境配慮型ペレット)',
+    legendHdpe: 'HDPE (高密度ポリエチレン)',
+    legendLdpe: 'LDPE (低密度ポリエチレン)',
+    legendPp: 'PP (ポリプロピレン)',
+    
+    // Analysis
+    analysisPositiveTitle: 'GWGペレットが最も環境に優しいです！',
+    analysisPositiveVs: '比',
+    analysisPositiveSaved: '削減',
+    analysisNeutralTitle: '配合比率を調整してみてください',
+    analysisNeutralDesc: '現在の設定では、GWGペレットは従来のプラスチックよりも多くの炭素を排出します。',
+    
+    // Footer
+    footer: '© 2024 LCA Calculator - 炭素排出量分析ツール',
+    
+    // Units
+    kgCO2: 'kg CO₂',
+  },
 } as const;
 
 export type TranslationKey = keyof typeof translations.ko;
-
