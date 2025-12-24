@@ -28,18 +28,32 @@ export type DisposalMode =
   | 'COMPOST'        // 퇴비화
   | 'INCINERATION';  // 소각
 
+// 고객사 제조 공정 타입 (4개 중 1개 선택)
+export type ProcessType =
+  | 'ELECTRICITY'    // 총 전력 사용량
+  | 'INJECTION'      // 사출 (원료투입량)
+  | 'FILM'           // 필름
+  | 'SHEET';         // 시트
+
 // LCA 입력 데이터 타입
 export interface LcaInput {
   totalProductionKg: number;                    // 총 생산량 (kg)
-  gwgResinMix: Record<ResinType, number>;       // GWG 원료 배합 (비율)
-  gwgAdditiveMix: Record<AdditiveType, number>; // GWG 첨가제 배합 (비율)
+  gwgResinMix: Record<ResinType, number>;       // GWG 원료 배합 (비율, %)
+  gwgAdditiveMix: Record<AdditiveType, number>; // GWG 첨가제 배합 (비율, %)
   pelletElectricityKwh: number;                 // 펠릿 제조 전력 사용량 (kWh)
-  pelletSeaKm: number;                          // 펠릿 해상 운송 거리 (km)
-  pelletLandKm: number;                         // 펠릿 육상 운송 거리 (km)
-  productElectricityKwh: number;                // 2차 제조 공정 전력 (kWh)
-  sheetKg: number;                              // 시트 공정 사용량 (kg)
-  injectionKg: number;                          // 사출 공정 사용량 (kg)
-  filmKg: number;                               // 필름 공정 사용량 (kg)
+  
+  // 그린웨일 글로벌 운송 (펠릿 → 고객사)
+  gwgSeaKm: number;                             // 해상 운송 거리 (km)
+  gwgLandKm: number;                            // 육상 운송 거리 (km)
+  
+  // 고객사 운송 (제품 → 최종 목적지)
+  customerSeaKm: number;                        // 고객사 해상 운송 거리 (km)
+  customerLandKm: number;                       // 고객사 육상 운송 거리 (km)
+  
+  // 고객사 제조 공정 (4개 중 1개 선택)
+  processType: ProcessType;                     // 선택된 공정 타입
+  processValue: number;                         // 공정 값 (kWh 또는 kg)
+  
   disposalMode: DisposalMode;                   // 폐기 시나리오
 }
 
@@ -50,8 +64,10 @@ export type ScenarioName = 'GWG' | 'HDPE' | 'LDPE' | 'PP';
 export interface LcaScenarioResult {
   name: ScenarioName;
   pelletStageEmission: number;     // 펠릿 단계까지만의 kgCO2
-  productStageEmission: number;    // 제품 제조까지의 추가 배출량(공정/운송)
-  totalEmission: number;           // pellet + product
+  gwgTransportEmission: number;    // 그린웨일 글로벌 운송 배출량
+  productStageEmission: number;    // 제품 제조(공정) 배출량
+  customerTransportEmission: number; // 고객사 운송 배출량
+  totalEmission: number;           // 총 배출량
   disposalAddedEmission: number;   // 퇴비/소각에 따른 추가 배출량 (없으면 0)
 }
 
@@ -89,6 +105,14 @@ export const ADDITIVE_TYPES: AdditiveType[] = [
   'TAB_363',
 ];
 
+// 공정 타입 목록 (UI에서 사용)
+export const PROCESS_TYPES: ProcessType[] = [
+  'ELECTRICITY',
+  'INJECTION',
+  'FILM',
+  'SHEET',
+];
+
 // 레진 타입 한글 라벨
 export const RESIN_LABELS: Record<ResinType, string> = {
   TPS: 'TPS (카사바전분)',
@@ -122,3 +146,18 @@ export const DISPOSAL_LABELS: Record<DisposalMode, string> = {
   INCINERATION: '소각',
 };
 
+// 공정 타입 한글 라벨
+export const PROCESS_LABELS: Record<ProcessType, string> = {
+  ELECTRICITY: '총 전력 사용량 (kWh)',
+  INJECTION: '사출 - 원료투입량 (kg)',
+  FILM: '필름 (kg)',
+  SHEET: '시트 (kg)',
+};
+
+// 공정 타입 단위
+export const PROCESS_UNITS: Record<ProcessType, string> = {
+  ELECTRICITY: 'kWh',
+  INJECTION: 'kg',
+  FILM: 'kg',
+  SHEET: 'kg',
+};

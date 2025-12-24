@@ -1,4 +1,4 @@
-import type { ResinType, AdditiveType } from '../types/lca';
+import type { ResinType, AdditiveType, ProcessType } from '../types/lca';
 
 // 레진별 kgCO2/kg 배출 계수 (엑셀 DB 시트 기준)
 export const RESIN_EMISSION_PER_KG: Record<ResinType, number> = {
@@ -28,12 +28,12 @@ export const ADDITIVE_EMISSION_PER_KG: Record<AdditiveType, number> = {
 // 전력 사용 배출 계수 (kgCO2/kWh)
 export const ELECTRICITY_EMISSION_PER_KWH = 0.478;
 
-// 공정별 배출 계수 (kgCO2/kg)
-export const PROCESS_EMISSION_PER_KG = {
-  sheet: 0.19,      // 중공 공정 (시트)
-  injection: 0.22,  // 사출 공정
-  film: 0.58,       // Blow 공정 (필름)
-} as const;
+// 공정별 배출 계수 (kgCO2/kg) - 수정된 계수
+export const PROCESS_EMISSION_PER_KG: Record<Exclude<ProcessType, 'ELECTRICITY'>, number> = {
+  INJECTION: 0.22,  // 사출 공정
+  FILM: 0.58,       // 필름 공정
+  SHEET: 0.19,      // 시트 공정
+};
 
 // 운송 배출 계수
 export const TRANSPORT_EMISSION = {
@@ -49,14 +49,21 @@ export const DISPOSAL_EMISSION_PER_KG = {
   pbat: 2.4,    // PBAT 소각
 } as const;
 
+// HDPE/LDPE/PP 고정 탄소배출량 (버진, 국내운송 기준) - kgCO2/톤
+export const FIXED_EMISSION_PER_TON = {
+  HDPE: 2231.8,
+  LDPE: 2131.8,
+  PP: 1801.8,
+} as const;
+
 // HDPE 기본 배합 시나리오
 export const HDPE_BASE_MIX: Record<ResinType, number> = {
   TPS: 0,
   PLA: 0,
   PBAT: 0,
-  HDPE_VIRGIN: 0.65,
-  HDPE_RECYCLE: 0.25,
-  HDPE_BIO: 0.1,
+  HDPE_VIRGIN: 100,  // % 단위
+  HDPE_RECYCLE: 0,
+  HDPE_BIO: 0,
   LDPE_VIRGIN: 0,
   LDPE_RECYCLE: 0,
   LDPE_BIO: 0,
@@ -73,9 +80,9 @@ export const LDPE_BASE_MIX: Record<ResinType, number> = {
   HDPE_VIRGIN: 0,
   HDPE_RECYCLE: 0,
   HDPE_BIO: 0,
-  LDPE_VIRGIN: 0.65,
-  LDPE_RECYCLE: 0.25,
-  LDPE_BIO: 0.1,
+  LDPE_VIRGIN: 100,  // % 단위
+  LDPE_RECYCLE: 0,
+  LDPE_BIO: 0,
   PP_VIRGIN: 0,
   PP_RECYCLE: 0,
   PP_BIO: 0,
@@ -92,9 +99,9 @@ export const PP_BASE_MIX: Record<ResinType, number> = {
   LDPE_VIRGIN: 0,
   LDPE_RECYCLE: 0,
   LDPE_BIO: 0,
-  PP_VIRGIN: 0.65,
-  PP_RECYCLE: 0.25,
-  PP_BIO: 0.1,
+  PP_VIRGIN: 100,  // % 단위
+  PP_RECYCLE: 0,
+  PP_BIO: 0,
 };
 
 // 첨가제 없음 (비교 시나리오용)
@@ -105,4 +112,3 @@ export const EMPTY_ADDITIVE_MIX: Record<AdditiveType, number> = {
   CASTOR_OIL: 0,
   TAB_363: 0,
 };
-

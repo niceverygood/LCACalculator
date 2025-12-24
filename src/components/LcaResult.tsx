@@ -40,9 +40,21 @@ export default function LcaResult({ result }: LcaResultProps) {
             </span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">제품 제조 추가 배출량</span>
+            <span className="summary-label">그린웨일 운송 배출량</span>
+            <span className="summary-value">
+              {gwg.gwgTransportEmission.toFixed(2)} <small>kg CO₂</small>
+            </span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-label">고객사 제조 배출량</span>
             <span className="summary-value">
               {gwg.productStageEmission.toFixed(2)} <small>kg CO₂</small>
+            </span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-label">고객사 운송 배출량</span>
+            <span className="summary-value">
+              {gwg.customerTransportEmission.toFixed(2)} <small>kg CO₂</small>
             </span>
           </div>
           <div className="summary-item">
@@ -68,9 +80,11 @@ export default function LcaResult({ result }: LcaResultProps) {
             <thead>
               <tr>
                 <th>종류</th>
-                <th>펠릿 단계</th>
-                <th>제품 제조</th>
-                <th>폐기 포함</th>
+                <th>펠릿</th>
+                <th>GW운송</th>
+                <th>제조</th>
+                <th>고객운송</th>
+                <th>폐기</th>
                 <th>총합</th>
                 <th>GWG 대비</th>
               </tr>
@@ -80,49 +94,57 @@ export default function LcaResult({ result }: LcaResultProps) {
                 <td>
                   <span className="scenario-badge gwg">GWG</span>
                 </td>
-                <td>{gwg.pelletStageEmission.toFixed(2)}</td>
-                <td>{gwg.productStageEmission.toFixed(2)}</td>
-                <td>{gwg.disposalAddedEmission.toFixed(2)}</td>
-                <td className="total-cell">{gwg.totalEmission.toFixed(2)}</td>
+                <td>{gwg.pelletStageEmission.toFixed(1)}</td>
+                <td>{gwg.gwgTransportEmission.toFixed(1)}</td>
+                <td>{gwg.productStageEmission.toFixed(1)}</td>
+                <td>{gwg.customerTransportEmission.toFixed(1)}</td>
+                <td>{gwg.disposalAddedEmission.toFixed(1)}</td>
+                <td className="total-cell">{gwg.totalEmission.toFixed(1)}</td>
                 <td>-</td>
               </tr>
               <tr>
                 <td>
                   <span className="scenario-badge hdpe">HDPE</span>
                 </td>
-                <td>{hdpe.pelletStageEmission.toFixed(2)}</td>
-                <td>{hdpe.productStageEmission.toFixed(2)}</td>
-                <td>{hdpe.disposalAddedEmission.toFixed(2)}</td>
-                <td className="total-cell">{hdpe.totalEmission.toFixed(2)}</td>
+                <td>{hdpe.pelletStageEmission.toFixed(1)}</td>
+                <td>{hdpe.gwgTransportEmission.toFixed(1)}</td>
+                <td>{hdpe.productStageEmission.toFixed(1)}</td>
+                <td>{hdpe.customerTransportEmission.toFixed(1)}</td>
+                <td>{hdpe.disposalAddedEmission.toFixed(1)}</td>
+                <td className="total-cell">{hdpe.totalEmission.toFixed(1)}</td>
                 <td className={getDiff(hdpe, gwg) > 0 ? 'diff-positive' : 'diff-negative'}>
                   {getDiff(hdpe, gwg) > 0 ? '+' : ''}
-                  {getDiff(hdpe, gwg).toFixed(2)}
+                  {getDiff(hdpe, gwg).toFixed(1)}
                 </td>
               </tr>
               <tr>
                 <td>
                   <span className="scenario-badge ldpe">LDPE</span>
                 </td>
-                <td>{ldpe.pelletStageEmission.toFixed(2)}</td>
-                <td>{ldpe.productStageEmission.toFixed(2)}</td>
-                <td>{ldpe.disposalAddedEmission.toFixed(2)}</td>
-                <td className="total-cell">{ldpe.totalEmission.toFixed(2)}</td>
+                <td>{ldpe.pelletStageEmission.toFixed(1)}</td>
+                <td>{ldpe.gwgTransportEmission.toFixed(1)}</td>
+                <td>{ldpe.productStageEmission.toFixed(1)}</td>
+                <td>{ldpe.customerTransportEmission.toFixed(1)}</td>
+                <td>{ldpe.disposalAddedEmission.toFixed(1)}</td>
+                <td className="total-cell">{ldpe.totalEmission.toFixed(1)}</td>
                 <td className={getDiff(ldpe, gwg) > 0 ? 'diff-positive' : 'diff-negative'}>
                   {getDiff(ldpe, gwg) > 0 ? '+' : ''}
-                  {getDiff(ldpe, gwg).toFixed(2)}
+                  {getDiff(ldpe, gwg).toFixed(1)}
                 </td>
               </tr>
               <tr>
                 <td>
                   <span className="scenario-badge pp">PP</span>
                 </td>
-                <td>{pp.pelletStageEmission.toFixed(2)}</td>
-                <td>{pp.productStageEmission.toFixed(2)}</td>
-                <td>{pp.disposalAddedEmission.toFixed(2)}</td>
-                <td className="total-cell">{pp.totalEmission.toFixed(2)}</td>
+                <td>{pp.pelletStageEmission.toFixed(1)}</td>
+                <td>{pp.gwgTransportEmission.toFixed(1)}</td>
+                <td>{pp.productStageEmission.toFixed(1)}</td>
+                <td>{pp.customerTransportEmission.toFixed(1)}</td>
+                <td>{pp.disposalAddedEmission.toFixed(1)}</td>
+                <td className="total-cell">{pp.totalEmission.toFixed(1)}</td>
                 <td className={getDiff(pp, gwg) > 0 ? 'diff-positive' : 'diff-negative'}>
                   {getDiff(pp, gwg) > 0 ? '+' : ''}
-                  {getDiff(pp, gwg).toFixed(2)}
+                  {getDiff(pp, gwg).toFixed(1)}
                 </td>
               </tr>
             </tbody>
@@ -130,6 +152,8 @@ export default function LcaResult({ result }: LcaResultProps) {
         </div>
         <p className="table-note">
           * 단위: kg CO₂ / GWG 대비: 양수(+)는 더 많은 배출, 음수(-)는 더 적은 배출
+          <br />
+          * HDPE/LDPE/PP: 버진, 국내운송 기준 고정값 (2231.8 / 2131.8 / 1801.8 kg CO₂/톤)
         </p>
       </section>
 
@@ -201,4 +225,3 @@ export default function LcaResult({ result }: LcaResultProps) {
     </div>
   );
 }
-

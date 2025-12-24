@@ -5,13 +5,13 @@ import Layout from './components/Layout';
 import LcaForm from './components/LcaForm';
 import LcaResult from './components/LcaResult';
 
-// 기본 레진 배합 초기값
+// 기본 레진 배합 초기값 (% 단위)
 const defaultResinMix: Record<ResinType, number> = {
-  TPS: 0.62,
+  TPS: 62,
   PLA: 0,
   PBAT: 0,
   HDPE_VIRGIN: 0,
-  HDPE_RECYCLE: 0.28,
+  HDPE_RECYCLE: 28,
   HDPE_BIO: 0,
   LDPE_VIRGIN: 0,
   LDPE_RECYCLE: 0,
@@ -21,13 +21,13 @@ const defaultResinMix: Record<ResinType, number> = {
   PP_BIO: 0,
 };
 
-// 기본 첨가제 배합 초기값
+// 기본 첨가제 배합 초기값 (% 단위) - 원료 + 첨가제 합이 100%
 const defaultAdditiveMix: Record<AdditiveType, number> = {
-  TALC: 0.02,
-  COCONUT: 0.02,
-  BAMBOO: 0.02,
-  CASTOR_OIL: 0.02,
-  TAB_363: 0.02,
+  TALC: 2,
+  COCONUT: 2,
+  BAMBOO: 2,
+  CASTOR_OIL: 2,
+  TAB_363: 2,
 };
 
 // 기본 LCA 입력값
@@ -36,12 +36,15 @@ const defaultInput: LcaInput = {
   gwgResinMix: defaultResinMix,
   gwgAdditiveMix: defaultAdditiveMix,
   pelletElectricityKwh: 0,
-  pelletSeaKm: 1000,
-  pelletLandKm: 0,
-  productElectricityKwh: 0,
-  sheetKg: 0,
-  injectionKg: 0,
-  filmKg: 600,
+  // 그린웨일 글로벌 운송
+  gwgSeaKm: 1000,
+  gwgLandKm: 0,
+  // 고객사 운송
+  customerSeaKm: 0,
+  customerLandKm: 100,
+  // 고객사 제조 공정 (4개 중 1개 선택)
+  processType: 'FILM',
+  processValue: 600,
   disposalMode: 'PELLET_ONLY',
 };
 
@@ -62,4 +65,3 @@ function App() {
 }
 
 export default App;
-

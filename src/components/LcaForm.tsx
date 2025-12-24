@@ -1,10 +1,13 @@
-import type { LcaInput, ResinType, AdditiveType, DisposalMode } from '../types/lca';
+import type { LcaInput, ResinType, AdditiveType, DisposalMode, ProcessType } from '../types/lca';
 import {
   RESIN_TYPES,
   ADDITIVE_TYPES,
+  PROCESS_TYPES,
   RESIN_LABELS,
   ADDITIVE_LABELS,
   DISPOSAL_LABELS,
+  PROCESS_LABELS,
+  PROCESS_UNITS,
 } from '../types/lca';
 
 interface LcaFormProps {
@@ -23,7 +26,7 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
     onChange({ ...value, [field]: numValue });
   };
 
-  // 레진 배합 비율 변경 핸들러
+  // 레진 배합 비율 변경 핸들러 (% 단위)
   const handleResinChange = (resin: ResinType, inputValue: string) => {
     const parsed = parseFloat(inputValue);
     const numValue = isNaN(parsed) ? 0 : Math.max(0, parsed);
@@ -33,7 +36,7 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
     });
   };
 
-  // 첨가제 배합 비율 변경 핸들러
+  // 첨가제 배합 비율 변경 핸들러 (% 단위)
   const handleAdditiveChange = (additive: AdditiveType, inputValue: string) => {
     const parsed = parseFloat(inputValue);
     const numValue = isNaN(parsed) ? 0 : Math.max(0, parsed);
@@ -48,17 +51,26 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
     onChange({ ...value, disposalMode: mode });
   };
 
-  // 레진 합계 계산
+  // 공정 타입 변경 핸들러
+  const handleProcessTypeChange = (processType: ProcessType) => {
+    onChange({ ...value, processType, processValue: 0 });
+  };
+
+  // 레진 합계 계산 (% 단위)
   const resinSum = Object.values(value.gwgResinMix).reduce(
     (acc, val) => acc + val,
     0
   );
 
-  // 첨가제 합계 계산
+  // 첨가제 합계 계산 (% 단위)
   const additiveSum = Object.values(value.gwgAdditiveMix).reduce(
     (acc, val) => acc + val,
     0
   );
+
+  // 원료 + 첨가제 총합 (100%가 되어야 함)
+  const totalSum = resinSum + additiveSum;
+  const isTotalValid = Math.abs(totalSum - 100) < 0.01;
 
   return (
     <div className="lca-form">
@@ -68,7 +80,7 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
         <div className="input-grid">
           {RESIN_TYPES.map((resin) => (
             <div key={resin} className="input-group">
-              <label htmlFor={`resin-${resin}`}>{RESIN_LABELS[resin]}</label>
+              <label htmlFor={`resin-${resin}`}>{RESIN_LABELS[resin]} (%)</label>
               <input
                 type="number"
                 id={`resin-${resin}`}
@@ -76,17 +88,14 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
                 onChange={(e) => handleResinChange(resin, e.target.value)}
                 placeholder="0"
                 min="0"
-                max="1"
+                max="100"
                 step="0.01"
               />
             </div>
           ))}
         </div>
-        <div className={`sum-display ${Math.abs(resinSum - 1) > 0.01 ? 'warning' : 'valid'}`}>
-          <span>현재 합계: {resinSum.toFixed(2)}</span>
-          {Math.abs(resinSum - 1) > 0.01 && (
-            <span className="warning-text">⚠️ 합계가 1이 아닙니다!</span>
-          )}
+        <div className="sum-display valid">
+          <span>원료 합계: {resinSum.toFixed(2)}%</span>
         </div>
       </section>
 
@@ -97,7 +106,7 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
           {ADDITIVE_TYPES.map((additive) => (
             <div key={additive} className="input-group">
               <label htmlFor={`additive-${additive}`}>
-                {ADDITIVE_LABELS[additive]}
+                {ADDITIVE_LABELS[additive]} (%)
               </label>
               <input
                 type="number"
@@ -106,16 +115,23 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
                 onChange={(e) => handleAdditiveChange(additive, e.target.value)}
                 placeholder="0"
                 min="0"
-                max="1"
+                max="100"
                 step="0.01"
               />
             </div>
           ))}
         </div>
-        <div className={`sum-display ${additiveSum > 0 && Math.abs(additiveSum - 1) > 0.01 ? 'warning' : 'valid'}`}>
-          <span>현재 합계: {additiveSum.toFixed(2)}</span>
-          {additiveSum > 0 && Math.abs(additiveSum - 1) > 0.01 && (
-            <span className="warning-text">⚠️ 합계가 1이 아닙니다!</span>
+        <div className="sum-display valid">
+          <span>첨가제 합계: {additiveSum.toFixed(2)}%</span>
+        </div>
+      </section>
+
+      {/* 원료 + 첨가제 총합 표시 */}
+      <section className="form-section">
+        <div className={`sum-display ${isTotalValid ? 'valid' : 'warning'}`}>
+          <span>📊 원료 + 첨가제 총합: {totalSum.toFixed(2)}%</span>
+          {!isTotalValid && (
+            <span className="warning-text">⚠️ 총합이 100%가 되어야 합니다!</span>
           )}
         </div>
       </section>
@@ -146,24 +162,31 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
               min="0"
             />
           </div>
+        </div>
+      </section>
+
+      {/* 그린웨일 글로벌 운송 섹션 */}
+      <section className="form-section">
+        <h2 className="section-title">그린웨일 글로벌 운송 (펠릿 → 고객사)</h2>
+        <div className="input-grid">
           <div className="input-group">
-            <label htmlFor="pelletSeaKm">해상 운송 거리 (km)</label>
+            <label htmlFor="gwgSeaKm">해상 운송 거리 (km)</label>
             <input
               type="number"
-              id="pelletSeaKm"
-              value={value.pelletSeaKm || ''}
-              onChange={(e) => handleNumberChange('pelletSeaKm', e.target.value)}
+              id="gwgSeaKm"
+              value={value.gwgSeaKm || ''}
+              onChange={(e) => handleNumberChange('gwgSeaKm', e.target.value)}
               placeholder="0"
               min="0"
             />
           </div>
           <div className="input-group">
-            <label htmlFor="pelletLandKm">육상 운송 거리 (km)</label>
+            <label htmlFor="gwgLandKm">육상 운송 거리 (km)</label>
             <input
               type="number"
-              id="pelletLandKm"
-              value={value.pelletLandKm || ''}
-              onChange={(e) => handleNumberChange('pelletLandKm', e.target.value)}
+              id="gwgLandKm"
+              value={value.gwgLandKm || ''}
+              onChange={(e) => handleNumberChange('gwgLandKm', e.target.value)}
               placeholder="0"
               min="0"
             />
@@ -171,50 +194,61 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
         </div>
       </section>
 
-      {/* 제품 제조 공정 입력 섹션 */}
+      {/* 고객사 제조 공정 입력 섹션 (4개 중 1개 선택) */}
       <section className="form-section">
-        <h2 className="section-title">제품 제조 공정 입력</h2>
+        <h2 className="section-title">고객사 제조 공정 (1개 선택)</h2>
+        <div className="input-group" style={{ marginBottom: '12px' }}>
+          <label htmlFor="processType">공정 방식 선택</label>
+          <select
+            id="processType"
+            value={value.processType}
+            onChange={(e) => handleProcessTypeChange(e.target.value as ProcessType)}
+          >
+            {PROCESS_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {PROCESS_LABELS[type]}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="input-group">
+          <label htmlFor="processValue">
+            {PROCESS_LABELS[value.processType]}
+          </label>
+          <input
+            type="number"
+            id="processValue"
+            value={value.processValue || ''}
+            onChange={(e) => handleNumberChange('processValue', e.target.value)}
+            placeholder="0"
+            min="0"
+            step="0.01"
+          />
+        </div>
+      </section>
+
+      {/* 고객사 운송 섹션 */}
+      <section className="form-section">
+        <h2 className="section-title">고객사 운송 (제품 → 최종 목적지)</h2>
         <div className="input-grid">
           <div className="input-group">
-            <label htmlFor="productElectricityKwh">2차 제조 전력 사용량 (kWh)</label>
+            <label htmlFor="customerSeaKm">해상 운송 거리 (km)</label>
             <input
               type="number"
-              id="productElectricityKwh"
-              value={value.productElectricityKwh || ''}
-              onChange={(e) => handleNumberChange('productElectricityKwh', e.target.value)}
+              id="customerSeaKm"
+              value={value.customerSeaKm || ''}
+              onChange={(e) => handleNumberChange('customerSeaKm', e.target.value)}
               placeholder="0"
               min="0"
             />
           </div>
           <div className="input-group">
-            <label htmlFor="injectionKg">사출 공정 원료량 (kg)</label>
+            <label htmlFor="customerLandKm">육상 운송 거리 (km)</label>
             <input
               type="number"
-              id="injectionKg"
-              value={value.injectionKg || ''}
-              onChange={(e) => handleNumberChange('injectionKg', e.target.value)}
-              placeholder="0"
-              min="0"
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="filmKg">필름 공정 원료량 (kg)</label>
-            <input
-              type="number"
-              id="filmKg"
-              value={value.filmKg || ''}
-              onChange={(e) => handleNumberChange('filmKg', e.target.value)}
-              placeholder="0"
-              min="0"
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="sheetKg">시트 공정 원료량 (kg)</label>
-            <input
-              type="number"
-              id="sheetKg"
-              value={value.sheetKg || ''}
-              onChange={(e) => handleNumberChange('sheetKg', e.target.value)}
+              id="customerLandKm"
+              value={value.customerLandKm || ''}
+              onChange={(e) => handleNumberChange('customerLandKm', e.target.value)}
               placeholder="0"
               min="0"
             />
@@ -239,8 +273,12 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
             ))}
           </select>
         </div>
+        {value.disposalMode === 'COMPOST' && (
+          <div className="sum-display warning" style={{ marginTop: '12px' }}>
+            <span>ℹ️ HDPE, LDPE, PP는 퇴비화 불가 → 소각 처리로 계산됩니다</span>
+          </div>
+        )}
       </section>
     </div>
   );
 }
-
