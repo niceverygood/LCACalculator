@@ -59,13 +59,24 @@ body {
 
 /* Header */
 .app-header {
-  text-align: center;
   margin-bottom: 32px;
   padding: 24px;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   border-radius: var(--radius-lg);
   color: white;
   box-shadow: var(--shadow-lg);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-text {
+  text-align: left;
+  flex: 1;
 }
 
 .app-header h1 {
@@ -78,6 +89,45 @@ body {
 .app-header .subtitle {
   font-size: 0.95rem;
   opacity: 0.9;
+}
+
+/* Language Selector */
+.language-selector {
+  flex-shrink: 0;
+}
+
+.language-selector select {
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.language-selector select:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.language-selector select:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
+.language-selector select option {
+  background: var(--color-card);
+  color: var(--color-text);
+  padding: 8px;
 }
 
 /* Main Content - 2 Column Layout */
@@ -512,6 +562,15 @@ body {
   .comparison-table th,
   .comparison-table td {
     padding: 10px 6px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header-text {
+    text-align: center;
   }
 }
 

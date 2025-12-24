@@ -3,18 +3,58 @@ import {
   RESIN_TYPES,
   ADDITIVE_TYPES,
   PROCESS_TYPES,
-  RESIN_LABELS,
-  ADDITIVE_LABELS,
-  DISPOSAL_LABELS,
-  PROCESS_LABELS,
 } from '../types/lca';
+import { useLanguage } from '../i18n';
 
 interface LcaFormProps {
   value: LcaInput;
   onChange: (next: LcaInput) => void;
 }
 
+// Resin key to translation key mapping
+const RESIN_TRANSLATION_KEYS: Record<ResinType, string> = {
+  TPS: 'resinTPS',
+  PLA: 'resinPLA',
+  PBAT: 'resinPBAT',
+  HDPE_VIRGIN: 'resinHDPE_VIRGIN',
+  HDPE_RECYCLE: 'resinHDPE_RECYCLE',
+  HDPE_BIO: 'resinHDPE_BIO',
+  LDPE_VIRGIN: 'resinLDPE_VIRGIN',
+  LDPE_RECYCLE: 'resinLDPE_RECYCLE',
+  LDPE_BIO: 'resinLDPE_BIO',
+  PP_VIRGIN: 'resinPP_VIRGIN',
+  PP_RECYCLE: 'resinPP_RECYCLE',
+  PP_BIO: 'resinPP_BIO',
+};
+
+// Additive labels (not translated)
+const ADDITIVE_LABELS: Record<AdditiveType, string> = {
+  BIOMASS_1: 'Biomass 1',
+  BIOMASS_2: 'Biomass 2',
+  ADDITIVE_1: 'Additive 1',
+  ADDITIVE_2: 'Additive 2',
+  ADDITIVE_3: 'Additive 3',
+};
+
+// Process type to translation key mapping
+const PROCESS_TRANSLATION_KEYS: Record<ProcessType, string> = {
+  ELECTRICITY: 'processElectricity',
+  INJECTION: 'processInjection',
+  FILM: 'processFilm',
+  SHEET: 'processSheet',
+};
+
+// Disposal mode to translation key mapping
+const DISPOSAL_TRANSLATION_KEYS: Record<DisposalMode, string> = {
+  PELLET_ONLY: 'disposalPelletOnly',
+  TO_PRODUCT: 'disposalToProduct',
+  COMPOST: 'disposalCompost',
+  INCINERATION: 'disposalIncineration',
+};
+
 export default function LcaForm({ value, onChange }: LcaFormProps) {
+  const { t } = useLanguage();
+
   // 숫자 입력 핸들러 (NaN 방지)
   const handleNumberChange = (
     field: keyof LcaInput,
@@ -75,11 +115,13 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
     <div className="lca-form">
       {/* 원료 배합 비율 섹션 */}
       <section className="form-section">
-        <h2 className="section-title">원료 배합 비율 입력 (GWG 펠릿)</h2>
+        <h2 className="section-title">{t('resinSection')}</h2>
         <div className="input-grid">
           {RESIN_TYPES.map((resin) => (
             <div key={resin} className="input-group">
-              <label htmlFor={`resin-${resin}`}>{RESIN_LABELS[resin]} (%)</label>
+              <label htmlFor={`resin-${resin}`}>
+                {t(RESIN_TRANSLATION_KEYS[resin] as any)} (%)
+              </label>
               <input
                 type="number"
                 id={`resin-${resin}`}
@@ -94,13 +136,13 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
           ))}
         </div>
         <div className="sum-display valid">
-          <span>원료 합계: {resinSum.toFixed(2)}%</span>
+          <span>{t('resinSum')}: {resinSum.toFixed(2)}%</span>
         </div>
       </section>
 
       {/* 첨가제 배합 비율 섹션 */}
       <section className="form-section">
-        <h2 className="section-title">첨가제 배합 비율 입력</h2>
+        <h2 className="section-title">{t('additiveSection')}</h2>
         <div className="input-grid">
           {ADDITIVE_TYPES.map((additive) => (
             <div key={additive} className="input-group">
@@ -121,26 +163,26 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
           ))}
         </div>
         <div className="sum-display valid">
-          <span>첨가제 합계: {additiveSum.toFixed(2)}%</span>
+          <span>{t('additiveSum')}: {additiveSum.toFixed(2)}%</span>
         </div>
       </section>
 
       {/* 원료 + 첨가제 총합 표시 */}
       <section className="form-section">
         <div className={`sum-display ${isTotalValid ? 'valid' : 'warning'}`}>
-          <span>📊 원료 + 첨가제 총합: {totalSum.toFixed(2)}%</span>
+          <span>📊 {t('totalSum')}: {totalSum.toFixed(2)}%</span>
           {!isTotalValid && (
-            <span className="warning-text">⚠️ 총합이 100%가 되어야 합니다!</span>
+            <span className="warning-text">{t('totalWarning')}</span>
           )}
         </div>
       </section>
 
       {/* 총 생산량 및 펠릿 공정 섹션 */}
       <section className="form-section">
-        <h2 className="section-title">총 생산량 및 펠릿 공정</h2>
+        <h2 className="section-title">{t('productionSection')}</h2>
         <div className="input-grid">
           <div className="input-group">
-            <label htmlFor="totalProductionKg">총 생산량 (kg)</label>
+            <label htmlFor="totalProductionKg">{t('totalProduction')}</label>
             <input
               type="number"
               id="totalProductionKg"
@@ -151,7 +193,7 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
             />
           </div>
           <div className="input-group">
-            <label htmlFor="pelletElectricityKwh">펠릿 전력 사용량 (kWh)</label>
+            <label htmlFor="pelletElectricityKwh">{t('pelletElectricity')}</label>
             <input
               type="number"
               id="pelletElectricityKwh"
@@ -166,10 +208,10 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
 
       {/* 그린웨일 글로벌 운송 섹션 */}
       <section className="form-section">
-        <h2 className="section-title">그린웨일 글로벌 운송 (펠릿 → 고객사)</h2>
+        <h2 className="section-title">{t('gwgTransportSection')}</h2>
         <div className="input-grid">
           <div className="input-group">
-            <label htmlFor="gwgSeaKm">해상 운송 거리 (km)</label>
+            <label htmlFor="gwgSeaKm">{t('seaTransport')}</label>
             <input
               type="number"
               id="gwgSeaKm"
@@ -180,7 +222,7 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
             />
           </div>
           <div className="input-group">
-            <label htmlFor="gwgLandKm">육상 운송 거리 (km)</label>
+            <label htmlFor="gwgLandKm">{t('landTransport')}</label>
             <input
               type="number"
               id="gwgLandKm"
@@ -195,9 +237,9 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
 
       {/* 고객사 제조 공정 입력 섹션 (4개 중 1개 선택) */}
       <section className="form-section">
-        <h2 className="section-title">고객사 제조 공정 (1개 선택)</h2>
+        <h2 className="section-title">{t('customerProcessSection')}</h2>
         <div className="input-group" style={{ marginBottom: '12px' }}>
-          <label htmlFor="processType">공정 방식 선택</label>
+          <label htmlFor="processType">{t('processType')}</label>
           <select
             id="processType"
             value={value.processType}
@@ -205,14 +247,14 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
           >
             {PROCESS_TYPES.map((type) => (
               <option key={type} value={type}>
-                {PROCESS_LABELS[type]}
+                {t(PROCESS_TRANSLATION_KEYS[type] as any)}
               </option>
             ))}
           </select>
         </div>
         <div className="input-group">
           <label htmlFor="processValue">
-            {PROCESS_LABELS[value.processType]}
+            {t(PROCESS_TRANSLATION_KEYS[value.processType] as any)}
           </label>
           <input
             type="number"
@@ -228,10 +270,10 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
 
       {/* 고객사 운송 섹션 */}
       <section className="form-section">
-        <h2 className="section-title">고객사 운송 (제품 → 최종 목적지)</h2>
+        <h2 className="section-title">{t('customerTransportSection')}</h2>
         <div className="input-grid">
           <div className="input-group">
-            <label htmlFor="customerSeaKm">해상 운송 거리 (km)</label>
+            <label htmlFor="customerSeaKm">{t('seaTransport')}</label>
             <input
               type="number"
               id="customerSeaKm"
@@ -242,7 +284,7 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
             />
           </div>
           <div className="input-group">
-            <label htmlFor="customerLandKm">육상 운송 거리 (km)</label>
+            <label htmlFor="customerLandKm">{t('landTransport')}</label>
             <input
               type="number"
               id="customerLandKm"
@@ -257,24 +299,24 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
 
       {/* 폐기 시나리오 섹션 */}
       <section className="form-section">
-        <h2 className="section-title">폐기 시나리오</h2>
+        <h2 className="section-title">{t('disposalSection')}</h2>
         <div className="input-group">
-          <label htmlFor="disposalMode">폐기 방식 선택</label>
+          <label htmlFor="disposalMode">{t('disposalMode')}</label>
           <select
             id="disposalMode"
             value={value.disposalMode}
             onChange={(e) => handleDisposalChange(e.target.value as DisposalMode)}
           >
-            {(Object.keys(DISPOSAL_LABELS) as DisposalMode[]).map((mode) => (
+            {(['PELLET_ONLY', 'TO_PRODUCT', 'COMPOST', 'INCINERATION'] as DisposalMode[]).map((mode) => (
               <option key={mode} value={mode}>
-                {DISPOSAL_LABELS[mode]}
+                {t(DISPOSAL_TRANSLATION_KEYS[mode] as any)}
               </option>
             ))}
           </select>
         </div>
         {value.disposalMode === 'COMPOST' && (
           <div className="sum-display warning" style={{ marginTop: '12px' }}>
-            <span>ℹ️ HDPE, LDPE, PP는 퇴비화 불가 → 소각 처리로 계산됩니다</span>
+            <span>{t('compostWarning')}</span>
           </div>
         )}
       </section>
