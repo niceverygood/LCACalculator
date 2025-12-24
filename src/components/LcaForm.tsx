@@ -7,7 +7,6 @@ import {
   ADDITIVE_LABELS,
   DISPOSAL_LABELS,
   PROCESS_LABELS,
-  PROCESS_UNITS,
 } from '../types/lca';
 
 interface LcaFormProps {
