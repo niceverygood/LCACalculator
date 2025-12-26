@@ -15,6 +15,7 @@ import {
   TRANSPORT_EMISSION,
   DISPOSAL_EMISSION_PER_KG,
   FIXED_EMISSION_PER_TON,
+  YIELD_RATE,  // 수득율 상수 추가
 } from '../data/emissionFactors';
 
 /**
@@ -25,17 +26,47 @@ function percentToRatio(percent: number): number {
 }
 
 /**
+ * 수득율을 적용한 실제 필요 원료량 계산
+ * 엑셀 DB 시트 기준: 수득율 = 0.95 (95%)
+ * 
+ * @description
+ * 왜 이렇게 계산하는가?
+ * - 수득율(Yield Rate)은 원료 투입량 대비 최종 제품 산출량의 비율
+ * - 95% 수득율 = 100kg 원료 투입 시 95kg 제품 생산
+ * - 따라서 원하는 제품량을 생산하려면: 필요 원료량 = 제품량 / 수득율
+ * - 예: 1000kg 제품 생산 시 → 1000 / 0.95 = 1052.63kg 원료 필요
+ * 
+ * @param productionKg 목표 생산량 (kg)
+ * @returns 수득율이 적용된 실제 필요 원료량 (kg)
+ */
+function applyYieldRate(productionKg: number): number {
+  // 수득율 적용: 실제 필요 원료량 = 목표 생산량 / 수득율
+  return productionKg / YIELD_RATE;
+}
+
+/**
  * 펠릿 단계까지의 탄소 배출량 계산 (GWG용)
  * 원료 + 첨가제 합이 100%가 되어야 함
+ * 
+ * @description 수득율 95% 적용
+ * - 엑셀 DB 시트 기준: 수득율 = 0.95
+ * - 실제 필요 원료량 = 목표 생산량 / 수득율
+ * - 예: 1000kg 제품 생산 시 → 1000 / 0.95 = 1052.63kg 원료 필요
+ * - 이 함수에서 수득율이 적용됨 (GWG 시나리오 전용)
  */
 export function calculatePelletStageEmission(
   input: LcaInput,
   resinMix: Record<ResinType, number>,
   additiveMix: Record<AdditiveType, number>
 ): number {
-  const totalKg = input.totalProductionKg;
+  // ========================================
+  // [수득율 95% 적용] - 엑셀 DB 시트 행 25 기준
+  // 총 생산량에 수득율을 적용하여 실제 필요 원료량 계산
+  // ========================================
+  const totalKg = applyYieldRate(input.totalProductionKg);
 
   // 레진 배출량 (% 값을 비율로 변환)
+  // 각 레진 비율 × 해당 레진 배출계수 × 총 원료량
   let resinEmission = 0;
   for (const resin of Object.keys(resinMix) as ResinType[]) {
     const ratio = percentToRatio(resinMix[resin]);
@@ -44,6 +75,7 @@ export function calculatePelletStageEmission(
   resinEmission *= totalKg;
 
   // 첨가제 배출량 (% 값을 비율로 변환)
+  // 각 첨가제 비율 × 해당 첨가제 배출계수 × 총 원료량
   let additiveEmission = 0;
   for (const additive of Object.keys(additiveMix) as AdditiveType[]) {
     const ratio = percentToRatio(additiveMix[additive]);
@@ -51,7 +83,8 @@ export function calculatePelletStageEmission(
   }
   additiveEmission *= totalKg;
 
-  // 전력 배출량
+  // 전력 배출량 (펠릿 제조 공정 전력)
+  // 전력 사용량 × 전력 배출계수 (0.478 kgCO2/kWh)
   const electricEmission =
     input.pelletElectricityKwh * ELECTRICITY_EMISSION_PER_KWH;
 
@@ -81,16 +114,36 @@ export function calculateCustomerTransportEmission(input: LcaInput): number {
 }
 
 /**
- * 제품 제조 단계의 배출량 계산 (4개 공정 중 1개 선택)
+ * 제품 제조 단계의 배출량 계산 (5개 공정 중 1개 선택)
+ * 
+ * @description 엑셀 DB 시트 기준 5개 공정 방식:
+ * 1. 총 전력 사용량 (kWh) - 배출계수: 0.478 kgCO2/kWh
+ * 2. 사출 (kg) - 배출계수: 0.29 kgCO2/kg
+ * 3. 압출 (kg) - 배출계수: 0.219 kgCO2/kg (신규 추가)
+ * 4. 시트 (kg) - 배출계수: 0.192 kgCO2/kg
+ * 5. 필름 (kg) - 배출계수: 0.219 kgCO2/kg
+ * 
+ * @param input LCA 입력 데이터
+ * @returns 제품 제조 단계 탄소 배출량 (kgCO2)
  */
 export function calculateProductStageEmission(input: LcaInput): number {
   const { processType, processValue } = input;
   
   if (processType === 'ELECTRICITY') {
-    // 총 전력 사용량 (kWh)
+    // ========================================
+    // [총 전력 사용량 공정] - 엑셀 DB 시트 행 7
+    // 배출계수: 0.478 kgCO2/kWh (한국 산업전력 기준)
+    // ========================================
     return processValue * ELECTRICITY_EMISSION_PER_KWH;
   } else {
-    // 사출, 필름, 시트 공정 (kg)
+    // ========================================
+    // [kg 기반 공정] - 사출, 압출, 필름, 시트
+    // 각 공정별 배출계수 적용 (엑셀 DB 시트 행 8-11)
+    // - 사출: 0.29 kgCO2/kg
+    // - 압출: 0.219 kgCO2/kg
+    // - 시트: 0.192 kgCO2/kg
+    // - 필름: 0.219 kgCO2/kg
+    // ========================================
     return processValue * PROCESS_EMISSION_PER_KG[processType as Exclude<ProcessType, 'ELECTRICITY'>];
   }
 }

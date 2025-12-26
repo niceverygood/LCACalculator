@@ -30,9 +30,10 @@ export const translations = {
     totalWarning: '⚠️ 총합이 100%가 되어야 합니다!',
     compostWarning: 'ℹ️ HDPE, LDPE, PP는 퇴비화 불가 → 소각 처리로 계산됩니다',
     
-    // Process types
+    // Process types - 엑셀 DB 시트 기준 5개 공정
     processElectricity: '총 전력 사용량 (kWh)',
     processInjection: '사출 - 원료투입량 (kg)',
+    processExtrusion: '압출 - 원료투입량 (kg)',  // 신규 추가
     processFilm: '필름 (kg)',
     processSheet: '시트 (kg)',
     
@@ -132,9 +133,10 @@ export const translations = {
     totalWarning: '⚠️ Total must be 100%!',
     compostWarning: 'ℹ️ HDPE, LDPE, PP cannot be composted → Calculated as incineration',
     
-    // Process types
+    // Process types - 5 process types from Excel DB sheet
     processElectricity: 'Total Electricity (kWh)',
     processInjection: 'Injection - Material Input (kg)',
+    processExtrusion: 'Extrusion - Material Input (kg)',  // Newly added
     processFilm: 'Film (kg)',
     processSheet: 'Sheet (kg)',
     
@@ -234,9 +236,10 @@ export const translations = {
     totalWarning: '⚠️ 合計は100%でなければなりません！',
     compostWarning: 'ℹ️ HDPE, LDPE, PPは堆肥化不可 → 焼却処理として計算されます',
     
-    // Process types
+    // Process types - エクセルDBシート基準5つの工程
     processElectricity: '総電力使用量 (kWh)',
     processInjection: '射出 - 原料投入量 (kg)',
+    processExtrusion: '押出 - 原料投入量 (kg)',  // 新規追加
     processFilm: 'フィルム (kg)',
     processSheet: 'シート (kg)',
     

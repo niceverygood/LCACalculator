@@ -37,9 +37,11 @@ const ADDITIVE_LABELS: Record<AdditiveType, string> = {
 };
 
 // Process type to translation key mapping
+// 엑셀 DB 시트 기준 5개 공정 방식 모두 포함
 const PROCESS_TRANSLATION_KEYS: Record<ProcessType, string> = {
   ELECTRICITY: 'processElectricity',
   INJECTION: 'processInjection',
+  EXTRUSION: 'processExtrusion',  // 신규 추가: 압출 공정
   FILM: 'processFilm',
   SHEET: 'processSheet',
 };

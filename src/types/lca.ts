@@ -28,12 +28,14 @@ export type DisposalMode =
   | 'COMPOST'        // 퇴비화
   | 'INCINERATION';  // 소각
 
-// 고객사 제조 공정 타입 (4개 중 1개 선택)
+// 고객사 제조 공정 타입 (5개 중 1개 선택)
+// 엑셀 DB 시트 기준: 전력 사용량, 사출, 압출, 필름, 시트
 export type ProcessType =
-  | 'ELECTRICITY'    // 총 전력 사용량
-  | 'INJECTION'      // 사출 (원료투입량)
-  | 'FILM'           // 필름
-  | 'SHEET';         // 시트
+  | 'ELECTRICITY'    // 총 전력 사용량 (kWh)
+  | 'INJECTION'      // 사출 (원료투입량, kg)
+  | 'EXTRUSION'      // 압출 (원료투입량, kg) - 신규 추가
+  | 'FILM'           // 필름 (kg)
+  | 'SHEET';         // 시트 (kg)
 
 // LCA 입력 데이터 타입
 export interface LcaInput {
@@ -106,11 +108,13 @@ export const ADDITIVE_TYPES: AdditiveType[] = [
 ];
 
 // 공정 타입 목록 (UI에서 사용)
+// 엑셀 DB 시트 기준 5개 공정 방식 모두 포함
 export const PROCESS_TYPES: ProcessType[] = [
-  'ELECTRICITY',
-  'INJECTION',
-  'FILM',
-  'SHEET',
+  'ELECTRICITY',  // 총 전력 사용량
+  'INJECTION',    // 사출
+  'EXTRUSION',    // 압출 (신규 추가)
+  'FILM',         // 필름
+  'SHEET',        // 시트
 ];
 
 // 레진 타입 한글 라벨
@@ -147,9 +151,11 @@ export const DISPOSAL_LABELS: Record<DisposalMode, string> = {
 };
 
 // 공정 타입 한글 라벨
+// 엑셀 DB 시트 기준 5개 공정 방식 라벨
 export const PROCESS_LABELS: Record<ProcessType, string> = {
   ELECTRICITY: '총 전력 사용량 (kWh)',
   INJECTION: '사출 - 원료투입량 (kg)',
+  EXTRUSION: '압출 - 원료투입량 (kg)',  // 신규 추가
   FILM: '필름 (kg)',
   SHEET: '시트 (kg)',
 };
@@ -158,6 +164,7 @@ export const PROCESS_LABELS: Record<ProcessType, string> = {
 export const PROCESS_UNITS: Record<ProcessType, string> = {
   ELECTRICITY: 'kWh',
   INJECTION: 'kg',
+  EXTRUSION: 'kg',  // 신규 추가
   FILM: 'kg',
   SHEET: 'kg',
 };
