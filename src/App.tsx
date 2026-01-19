@@ -33,6 +33,7 @@ const defaultAdditiveMix: Record<AdditiveType, number> = {
 // 기본 LCA 입력값
 const defaultInput: LcaInput = {
   totalProductionKg: 1000,
+  yieldRate: 95,  // 수득율 기본값 95% - 사용자 변경 가능
   gwgResinMix: defaultResinMix,
   gwgAdditiveMix: defaultAdditiveMix,
   pelletElectricityKwh: 0,
@@ -42,7 +43,7 @@ const defaultInput: LcaInput = {
   // 고객사 운송
   customerSeaKm: 0,
   customerLandKm: 100,
-  // 고객사 제조 공정 (4개 중 1개 선택)
+  // 고객사 제조 공정 (5개 중 1개 선택)
   processType: 'FILM',
   processValue: 600,
   disposalMode: 'PELLET_ONLY',

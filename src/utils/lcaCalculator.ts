@@ -27,31 +27,34 @@ function percentToRatio(percent: number): number {
 
 /**
  * 수득율을 적용한 실제 필요 원료량 계산
- * 엑셀 DB 시트 기준: 수득율 = 0.95 (95%)
  * 
  * @description
  * 왜 이렇게 계산하는가?
  * - 수득율(Yield Rate)은 원료 투입량 대비 최종 제품 산출량의 비율
  * - 95% 수득율 = 100kg 원료 투입 시 95kg 제품 생산
  * - 따라서 원하는 제품량을 생산하려면: 필요 원료량 = 제품량 / 수득율
- * - 예: 1000kg 제품 생산 시 → 1000 / 0.95 = 1052.63kg 원료 필요
+ * - 예: 1000kg 제품 생산 시, 수득율 95% → 1000 / 0.95 = 1052.63kg 원료 필요
  * 
  * @param productionKg 목표 생산량 (kg)
+ * @param yieldRatePercent 수득율 (%, 예: 95)
  * @returns 수득율이 적용된 실제 필요 원료량 (kg)
  */
-function applyYieldRate(productionKg: number): number {
+function applyYieldRate(productionKg: number, yieldRatePercent: number): number {
+  // 수득율 % → 비율 변환 (95% → 0.95)
+  const yieldRateRatio = yieldRatePercent / 100;
   // 수득율 적용: 실제 필요 원료량 = 목표 생산량 / 수득율
-  return productionKg / YIELD_RATE;
+  // 수득율이 0이거나 너무 작으면 기본값 95% 사용
+  const safeYieldRate = yieldRateRatio > 0 && yieldRateRatio <= 1 ? yieldRateRatio : YIELD_RATE;
+  return productionKg / safeYieldRate;
 }
 
 /**
  * 펠릿 단계까지의 탄소 배출량 계산 (GWG용)
  * 원료 + 첨가제 합이 100%가 되어야 함
  * 
- * @description 수득율 95% 적용
- * - 엑셀 DB 시트 기준: 수득율 = 0.95
+ * @description 수득율 적용 (사용자 입력값 또는 기본값 95%)
  * - 실제 필요 원료량 = 목표 생산량 / 수득율
- * - 예: 1000kg 제품 생산 시 → 1000 / 0.95 = 1052.63kg 원료 필요
+ * - 예: 1000kg 제품 생산 시, 수득율 95% → 1000 / 0.95 = 1052.63kg 원료 필요
  * - 이 함수에서 수득율이 적용됨 (GWG 시나리오 전용)
  */
 export function calculatePelletStageEmission(
@@ -60,10 +63,10 @@ export function calculatePelletStageEmission(
   additiveMix: Record<AdditiveType, number>
 ): number {
   // ========================================
-  // [수득율 95% 적용] - 엑셀 DB 시트 행 25 기준
+  // [수득율 적용] - 사용자 입력 수득율 사용 (기본값: 95%)
   // 총 생산량에 수득율을 적용하여 실제 필요 원료량 계산
   // ========================================
-  const totalKg = applyYieldRate(input.totalProductionKg);
+  const totalKg = applyYieldRate(input.totalProductionKg, input.yieldRate);
 
   // 레진 배출량 (% 값을 비율로 변환)
   // 각 레진 비율 × 해당 레진 배출계수 × 총 원료량

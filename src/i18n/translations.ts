@@ -17,6 +17,7 @@ export const translations = {
     
     // Labels
     totalProduction: '총 생산량 (kg)',
+    yieldRate: '수득율 (%)',  // 신규 추가 - 사용자 변경 가능
     pelletElectricity: '펠릿 전력 사용량 (kWh)',
     seaTransport: '해상 운송 거리 (km)',
     landTransport: '육상 운송 거리 (km)',
@@ -58,7 +59,7 @@ export const translations = {
     resinPP_BIO: 'PP (바이오)',
     
     // Result section
-    resultSummaryTitle: 'GWG 펠릿 기준 요약',
+    resultSummaryTitle: 'GWG 펠릿 기준 요약 (반올림, 소수점 3째)',  // 수정: 반올림 정보 추가
     resultComparisonTitle: '탄소 배출량 비교 (GWG vs HDPE/LDPE/PP)',
     resultChartTitle: '총 탄소 배출량 비교 차트',
     resultAnalysisTitle: '환경 영향 분석',
@@ -102,7 +103,7 @@ export const translations = {
     footer: '© 2024 LCA Calculator - 탄소 배출량 분석 도구',
     
     // Units
-    kgCO2: 'kg CO₂',
+    kgCO2: 'kgCO₂eq',
   },
   en: {
     // Header
@@ -120,6 +121,7 @@ export const translations = {
     
     // Labels
     totalProduction: 'Total Production (kg)',
+    yieldRate: 'Yield Rate (%)',  // Newly added - User adjustable
     pelletElectricity: 'Pellet Electricity (kWh)',
     seaTransport: 'Sea Transport Distance (km)',
     landTransport: 'Land Transport Distance (km)',
@@ -161,7 +163,7 @@ export const translations = {
     resinPP_BIO: 'PP (Bio)',
     
     // Result section
-    resultSummaryTitle: 'GWG Pellet Summary',
+    resultSummaryTitle: 'GWG Pellet Summary (Rounded, 3 decimal places)',
     resultComparisonTitle: 'Carbon Emission Comparison (GWG vs HDPE/LDPE/PP)',
     resultChartTitle: 'Total Carbon Emission Chart',
     resultAnalysisTitle: 'Environmental Impact Analysis',
@@ -205,7 +207,7 @@ export const translations = {
     footer: '© 2024 LCA Calculator - Carbon Emission Analysis Tool',
     
     // Units
-    kgCO2: 'kg CO₂',
+    kgCO2: 'kgCO₂eq',
   },
   ja: {
     // Header
@@ -223,6 +225,7 @@ export const translations = {
     
     // Labels
     totalProduction: '総生産量 (kg)',
+    yieldRate: '歩留率 (%)',  // 新規追加 - ユーザー変更可能
     pelletElectricity: 'ペレット電力使用量 (kWh)',
     seaTransport: '海上輸送距離 (km)',
     landTransport: '陸上輸送距離 (km)',
@@ -264,7 +267,7 @@ export const translations = {
     resinPP_BIO: 'PP (バイオ)',
     
     // Result section
-    resultSummaryTitle: 'GWGペレット基準サマリー',
+    resultSummaryTitle: 'GWGペレット基準サマリー (四捨五入、小数点3桁)',
     resultComparisonTitle: '炭素排出量比較 (GWG vs HDPE/LDPE/PP)',
     resultChartTitle: '総炭素排出量比較チャート',
     resultAnalysisTitle: '環境影響分析',
@@ -308,7 +311,7 @@ export const translations = {
     footer: '© 2024 LCA Calculator - 炭素排出量分析ツール',
     
     // Units
-    kgCO2: 'kg CO₂',
+    kgCO2: 'kgCO₂eq',
   },
 } as const;
 

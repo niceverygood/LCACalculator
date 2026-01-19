@@ -194,6 +194,20 @@ export default function LcaForm({ value, onChange }: LcaFormProps) {
               min="0"
             />
           </div>
+          {/* 수득율 입력 필드 - 사용자가 변경 가능 */}
+          <div className="input-group">
+            <label htmlFor="yieldRate">{t('yieldRate')}</label>
+            <input
+              type="number"
+              id="yieldRate"
+              value={value.yieldRate || ''}
+              onChange={(e) => handleNumberChange('yieldRate', e.target.value)}
+              placeholder="95"
+              min="1"
+              max="100"
+              step="0.1"
+            />
+          </div>
           <div className="input-group">
             <label htmlFor="pelletElectricityKwh">{t('pelletElectricity')}</label>
             <input

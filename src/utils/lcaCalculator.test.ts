@@ -50,6 +50,7 @@ const EXCEL_ADDITIVE_MIX: Record<AdditiveType, number> = {
 // 엑셀 예제 기본 입력값
 const EXCEL_BASE_INPUT: LcaInput = {
   totalProductionKg: 1000,          // 총 생산량 1000kg
+  yieldRate: 95,                    // 수득율 95% (사용자 변경 가능)
   gwgResinMix: EXCEL_GWG_RESIN_MIX,
   gwgAdditiveMix: EXCEL_ADDITIVE_MIX,
   pelletElectricityKwh: 600,        // 행 28: 600 kWh

@@ -40,6 +40,7 @@ export type ProcessType =
 // LCA 입력 데이터 타입
 export interface LcaInput {
   totalProductionKg: number;                    // 총 생산량 (kg)
+  yieldRate: number;                            // 수득율 (%, 기본값 95) - 사용자 변경 가능
   gwgResinMix: Record<ResinType, number>;       // GWG 원료 배합 (비율, %)
   gwgAdditiveMix: Record<AdditiveType, number>; // GWG 첨가제 배합 (비율, %)
   pelletElectricityKwh: number;                 // 펠릿 제조 전력 사용량 (kWh)
@@ -52,7 +53,7 @@ export interface LcaInput {
   customerSeaKm: number;                        // 고객사 해상 운송 거리 (km)
   customerLandKm: number;                       // 고객사 육상 운송 거리 (km)
   
-  // 고객사 제조 공정 (4개 중 1개 선택)
+  // 고객사 제조 공정 (5개 중 1개 선택)
   processType: ProcessType;                     // 선택된 공정 타입
   processValue: number;                         // 공정 값 (kWh 또는 kg)
   

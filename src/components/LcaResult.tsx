@@ -31,44 +31,44 @@ export default function LcaResult({ result }: LcaResultProps) {
 
   return (
     <div className="lca-result">
-      {/* GWG 펠릿 기준 요약 카드 */}
+      {/* GWG 펠릿 기준 요약 카드 - 소수점 3째 자리 반올림 */}
       <section className="result-card summary-card">
         <h2 className="section-title">{t('resultSummaryTitle')}</h2>
         <div className="summary-grid">
           <div className="summary-item">
             <span className="summary-label">{t('pelletEmission')}</span>
             <span className="summary-value">
-              {gwg.pelletStageEmission.toFixed(2)} <small>{t('kgCO2')}</small>
+              {gwg.pelletStageEmission.toFixed(3)} <small>{t('kgCO2')}</small>
             </span>
           </div>
           <div className="summary-item">
             <span className="summary-label">{t('gwgTransportEmission')}</span>
             <span className="summary-value">
-              {gwg.gwgTransportEmission.toFixed(2)} <small>{t('kgCO2')}</small>
+              {gwg.gwgTransportEmission.toFixed(3)} <small>{t('kgCO2')}</small>
             </span>
           </div>
           <div className="summary-item">
             <span className="summary-label">{t('productEmission')}</span>
             <span className="summary-value">
-              {gwg.productStageEmission.toFixed(2)} <small>{t('kgCO2')}</small>
+              {gwg.productStageEmission.toFixed(3)} <small>{t('kgCO2')}</small>
             </span>
           </div>
           <div className="summary-item">
             <span className="summary-label">{t('customerTransportEmission')}</span>
             <span className="summary-value">
-              {gwg.customerTransportEmission.toFixed(2)} <small>{t('kgCO2')}</small>
+              {gwg.customerTransportEmission.toFixed(3)} <small>{t('kgCO2')}</small>
             </span>
           </div>
           <div className="summary-item">
             <span className="summary-label">{t('disposalEmission')}</span>
             <span className="summary-value">
-              {gwg.disposalAddedEmission.toFixed(2)} <small>{t('kgCO2')}</small>
+              {gwg.disposalAddedEmission.toFixed(3)} <small>{t('kgCO2')}</small>
             </span>
           </div>
           <div className="summary-item highlight">
             <span className="summary-label">{t('totalEmission')}</span>
             <span className="summary-value total">
-              {gwg.totalEmission.toFixed(2)} <small>{t('kgCO2')}</small>
+              {gwg.totalEmission.toFixed(3)} <small>{t('kgCO2')}</small>
             </span>
           </div>
         </div>
