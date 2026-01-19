@@ -159,9 +159,7 @@ export const PROCESS_LABELS: Record<ProcessType, string> = {
   EXTRUSION: '압출 - 원료투입량 (kg)',  // 신규 추가
   FILM: '필름 (kg)',
   SHEET: '시트 (kg)',
-};
-
-// 공정 타입 단위
+};// 공정 타입 단위
 export const PROCESS_UNITS: Record<ProcessType, string> = {
   ELECTRICITY: 'kWh',
   INJECTION: 'kg',

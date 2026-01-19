@@ -1,40 +1,44 @@
 import type { ResinType, AdditiveType, ProcessType } from '../types/lca';
 
 // ============================================================================
-// 엑셀 DB 시트 기준 배출계수 (3.LCA 평가 방법_GWG_251224_C_M.xlsx)
-// 최종 업데이트: 2024-12-24
+// 배출계수 (kgCO₂eq/kg) - LCA 계산기 발견된 오류 사항_260119.pdf 기준
+// 최종 업데이트: 2026-01-19
 // ============================================================================
 
 // 수득율 상수 (그린웨일 글로벌 총 생산량 계산 시 적용)
-// 엑셀 DB 시트 행 25: 수득율 = 0.95 (95%)
+// 수득율 = 0.95 (95%) - 사용자가 UI에서 변경 가능
 // 적용 방식: 실제 필요 원료량 = 입력 생산량 / 수득율
 export const YIELD_RATE = 0.95;
 
-// 레진별 kgCO2/kg 배출 계수 (엑셀 DB 시트 기준)
-// TPS: 탄소흡수(-3.52) + 공정배출(0.4) = -3.12
-// PLA: 탄소흡수(-1.83) + 공정배출(2.33) = 0.5
+// ============================================================================
+// 레진별 kgCO₂eq/kg 배출 계수 (260119 업데이트)
+// ============================================================================
+// TPS: 탄소흡수(-0.746) + 공정배출(0.219) = -0.527 (변경 전: -3.12)
+// PLA: 탄소흡수(-1.83) + 공정배출(2.44) = 0.61 (변경 전: 0.5)
 export const RESIN_EMISSION_PER_KG: Record<ResinType, number> = {
-  TPS: -3.12,           // TPS (카사바전분) 합계
-  PLA: 0.5,             // PLA (옥수수전분) 합계
-  PBAT: 3.5,            // PBAT 원료 생산 배출
-  HDPE_VIRGIN: 1.9,     // HDPE(Virgin) 원료 생산 배출
-  HDPE_RECYCLE: 0.89,   // HDPE(Recycle) 원료 생산 배출
-  HDPE_BIO: -2.15,      // HDPE(Bio-PE) 원료 생산 배출
-  LDPE_VIRGIN: 1.71,    // LDPE(Virgin) 원료 생산 배출
-  LDPE_RECYCLE: 0.81,   // LDPE(Recycle) 원료 생산 배출
-  LDPE_BIO: -2.15,      // LDPE(Bio-PE) 원료 생산 배출
-  PP_VIRGIN: 1.47,      // PP(Virgin) 원료 생산 배출
-  PP_RECYCLE: 0.84,     // PP(Recycle) 원료 생산 배출
-  PP_BIO: 0.3,          // PP(Bio-PP) 원료 생산 배출
+  TPS: -0.527,          // TPS (카사바전분) 합계 [변경: -3.12 → -0.527]
+  PLA: 0.61,            // PLA (옥수수전분) 합계 [변경: 0.5 → 0.61]
+  PBAT: 3.5,            // PBAT 원료 생산 배출 (변경 없음)
+  HDPE_VIRGIN: 2.02,    // HDPE(Virgin) 원료 생산 배출 [변경: 1.9 → 2.02]
+  HDPE_RECYCLE: 0.92,   // HDPE(Recycle) 원료 생산 배출 [변경: 0.89 → 0.92]
+  HDPE_BIO: -2.01,      // HDPE(Bio-PE) 원료 생산 배출 [변경: -2.15 → -2.01]
+  LDPE_VIRGIN: 1.86,    // LDPE(Virgin) 원료 생산 배출 [변경: 1.71 → 1.86]
+  LDPE_RECYCLE: 0.87,   // LDPE(Recycle) 원료 생산 배출 [변경: 0.81 → 0.87]
+  LDPE_BIO: -2.27,      // LDPE(Bio-PE) 원료 생산 배출 [변경: -2.15 → -2.27]
+  PP_VIRGIN: 1.61,      // PP(Virgin) 원료 생산 배출 [변경: 1.47 → 1.61]
+  PP_RECYCLE: 0.88,     // PP(Recycle) 원료 생산 배출 [변경: 0.84 → 0.88]
+  PP_BIO: 0.3,          // PP(Bio-PP) 원료 생산 배출 (변경 없음)
 };
 
-// 첨가제별 kgCO2/kg 배출 계수 (엑셀 DB 시트 기준)
+// ============================================================================
+// 첨가제별 kgCO₂eq/kg 배출 계수 (260119 업데이트)
+// ============================================================================
 export const ADDITIVE_EMISSION_PER_KG: Record<AdditiveType, number> = {
-  BIOMASS_1: 2.6,       // Talc (자연유래) - Sheet 2 출처 첨부
-  BIOMASS_2: 6.99,      // Coconut powder
-  ADDITIVE_1: 0.86,     // Bamboo Powder
-  ADDITIVE_2: 18.9,     // Castor oil
-  ADDITIVE_3: 3.52,     // HAA Coupling TAB 363
+  BIOMASS_1: 0.04,      // Talc (자연유래) [변경: 2.6 → 0.04]
+  BIOMASS_2: 0.367,     // Coconut powder [변경: 6.99 → 0.367]
+  ADDITIVE_1: 1.45,     // Bamboo Powder [변경: 0.86 → 1.45]
+  ADDITIVE_2: 1.8,      // Castor oil [변경: 18.9 → 1.8]
+  ADDITIVE_3: 3.52,     // HAA Coupling TAB 363 (변경 없음)
 };
 
 // 전력 사용 배출 계수 (kgCO2/kWh) - 한국 산업전력 기준, 국가 LCI DB
